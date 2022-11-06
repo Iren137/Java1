@@ -1,0 +1,268 @@
+[
+  {
+    "name": "Variant 1",
+    "number": 4,
+    "generator": "TextTaskGenerator",
+    "tasks": [
+      {
+        "task": "the root of 25 is ...",
+        "answer": "5"
+      },
+      {
+        "task": "the square of 3 is ...",
+        "answer": "9"
+      },
+      {
+        "task": "15 meters and 120 decimetres is ... metres",
+        "answer": "27"
+      },
+      {
+        "task": "how many months have 28 days?",
+        "answer": "12"
+      }
+    ]
+  },
+  {
+    "name": "Variant 2",
+    "number": 5,
+    "generator": "TextTaskGenerator",
+    "tasks": [
+      {
+        "task": "what's the sun color?",
+        "answer": "yellow"
+      },
+      {
+        "task": "what is the best programming language?",
+        "answer": "C++"
+      },
+      {
+        "task": "when did the 100-year war start? (format: dd month yyyy)",
+        "answer": "24 May 1337"
+      },
+      {
+        "task": "what is the name of a polymer, that is, a molecule with a large number of successively repeating structural elements, which carries all the information about the genes and proteins necessary for the life of the whole organism.",
+        "answer": "DNA"
+      },
+      {
+        "task": "when was the perpetual motion machine invented?",
+        "answer": "perpetual motion machine does not exist"
+      }
+    ]
+  },
+  {
+    "name": "Variant 3",
+    "number": 5,
+    "generator": "EquationTaskGenerator",
+    "tasks": [
+      {
+        "min": 0,
+        "max": 50,
+        "plus": "yes",
+        "minus": "yes",
+        "mul": "no",
+        "div": "no"
+      },
+      {
+        "min": 1,
+        "max": 50,
+        "plus": "yes",
+        "minus": "yes",
+        "mul": "yes",
+        "div": "yes"
+      },
+      {
+        "min": 1,
+        "max": 50,
+        "plus": "yes",
+        "minus": "yes",
+        "mul": "yes",
+        "div": "yes"
+      },
+      {
+        "min": 7,
+        "max": 12,
+        "plus": "no",
+        "minus": "no",
+        "mul": "yes",
+        "div": "no"
+      },
+      {
+        "min": 1,
+        "max": 9,
+        "plus": "yes",
+        "minus": "no",
+        "mul": "no",
+        "div": "no"
+      }
+    ]
+  },
+  {
+    "name": "Variant 4",
+    "number": 5,
+    "generator": "ExpressionTaskGenerator",
+    "tasks": [
+      {
+        "min": 0,
+        "max": 50,
+        "plus": "yes",
+        "minus": "yes",
+        "mul": "no",
+        "div": "no"
+      },
+      {
+        "min": 1,
+        "max": 50,
+        "plus": "yes",
+        "minus": "yes",
+        "mul": "yes",
+        "div": "yes"
+      },
+      {
+        "min": 1,
+        "max": 50,
+        "plus": "yes",
+        "minus": "yes",
+        "mul": "yes",
+        "div": "yes"
+      },
+      {
+        "min": 7,
+        "max": 12,
+        "plus": "no",
+        "minus": "no",
+        "mul": "yes",
+        "div": "no"
+      },
+      {
+        "min": 1,
+        "max": 9,
+        "plus": "yes",
+        "minus": "no",
+        "mul": "no",
+        "div": "no"
+      }
+    ]
+  },
+  {
+    "name": "Variant 5",
+    "duplication": "yes",
+    "num": 3,
+    "generator": "PoolTaskGenerator",
+    "tasks": [
+      {
+        "type": "ExpressionTask",
+        "min": 0,
+        "max": 50,
+        "plus": "yes",
+        "minus": "yes",
+        "mul": "no",
+        "div": "no"
+      },
+      {
+        "type": "EquationTask",
+        "min": 1,
+        "max": 50,
+        "plus": "yes",
+        "minus": "no",
+        "mul": "yes",
+        "div": "yes"
+      },
+      {
+        "type": "TextTask",
+        "task": "the root of 25 is ...",
+        "answer": "5"
+      }
+    ]
+  },
+  {
+    "name": "Variant 6",
+    "duplication": "no",
+    "num": 3,
+    "generator": "PoolTaskGenerator",
+    "tasks": [
+      {
+        "type": "ExpressionTask",
+        "min": 0,
+        "max": 50,
+        "plus": "yes",
+        "minus": "yes",
+        "mul": "no",
+        "div": "no"
+      },
+      {
+        "type": "ExpressionTask",
+        "min": 10,
+        "max": 100,
+        "plus": "yes",
+        "minus": "yes",
+        "mul": "yes",
+        "div": "yes"
+      },
+      {
+        "type": "TextTask",
+        "task": "what is the best programming language?",
+        "answer": "C++"
+      }
+    ]
+  },
+  {
+    "name": "Variant 7",
+    "num": 3,
+    "generator": "GroupTaskGenerator",
+    "tasks": [
+      {
+        "type": "ExpressionTask",
+        "min": 7,
+        "max": 21,
+        "plus": "no",
+        "minus": "yes",
+        "mul": "no",
+        "div": "yes"
+      },
+      {
+        "type": "EquationTask",
+        "min": 1,
+        "max": 20,
+        "plus": "yes",
+        "minus": "yes",
+        "mul": "yes",
+        "div": "yes"
+      },
+      {
+        "type": "TextTask",
+        "task": "the root of 16 is ...",
+        "answer": "4"
+      }
+    ]
+  },
+  {
+    "name": "Variant 8",
+    "num": 3,
+    "generator": "PoolTaskGenerator",
+    "tasks": [
+      {
+        "type": "EquationTask",
+        "min": 48,
+        "max": 50,
+        "plus": "yes",
+        "minus": "no",
+        "mul": "no",
+        "div": "no"
+      },
+      {
+        "type": "ExpressionTask",
+        "min": 10,
+        "max": 100,
+        "plus": "yes",
+        "minus": "yes",
+        "mul": "yes",
+        "div": "yes"
+      },
+      {
+        "type": "TextTask",
+        "task": "what is the best programming language after C++?",
+        "answer": "Python"
+      }
+    ]
+  }
+]

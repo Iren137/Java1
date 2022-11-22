@@ -6,7 +6,6 @@ import by.Iren137.quizer.quiz.Result;
 import by.Iren137.quizer.tasks.Operator;
 import by.Iren137.quizer.tasks.Task;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Random;
@@ -86,12 +85,6 @@ public class EquationTask extends AbstractMathTask {
         out += '\n';
         out += "x = ";
         return out;
-    }
-
-    @Override
-    public String getAnswer() {
-        DecimalFormat format = new DecimalFormat();
-        return format.format(x);
     }
 
     @Override

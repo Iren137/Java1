@@ -7,13 +7,13 @@ public interface Task {
      @return текст задания
      */
     String getText();
-    String getAnswer();
+
     interface Generator {
         /**
          * Генерирует Task.
          *
          * @return задание
-         * @see    Task
+         * @see Task
          */
         Task generate();
     }

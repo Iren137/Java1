@@ -6,7 +6,6 @@ import by.Iren137.quizer.quiz.Result;
 import by.Iren137.quizer.tasks.Operator;
 import by.Iren137.quizer.tasks.Task;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.EnumSet;
 
@@ -57,11 +56,6 @@ public class ExpressionTask extends AbstractMathTask {
         out += " = ";
         return out;
     }
-    @Override
-    public String getAnswer() {
-        DecimalFormat format = new DecimalFormat();
-        return format.format(answer);
-    }
 
     @Override
     public Result validate(String input_answer) {
@@ -81,6 +75,7 @@ public class ExpressionTask extends AbstractMathTask {
             return Result.INCORRECT_INPUT;
         }
     }
+
     public static class Generator extends AbstractMathTask.Generator {
         ArrayList<ExpressionTask> tasks = new ArrayList<>();
         int current = 0;

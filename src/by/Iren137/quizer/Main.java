@@ -17,19 +17,21 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.instrument.IllegalClassFormatException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
 
-import static by.Iren137.quizer.Constants.jsonWay;
+import static by.Iren137.quizer.Constants.*;
 
 public class Main {
     public static void main(String[] args) throws IOException, ParseException {
         Map<String, Quiz> quizMap = getQuizMap();
-        System.out.println("Write name of the test");
+        System.out.println(ANSI_PURPLE + "Write name of the test" + ANSI_WHITE);
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
         String variant = reader.readLine();
         while (variant.equals("") || !quizMap.containsKey(variant)) {
-            System.out.println("Wrong name. Try again");
+            System.out.println(ANSI_RED + "Wrong name. Try again" + ANSI_WHITE);
             variant = reader.readLine();
         }
         Quiz currentQuiz = quizMap.get(variant);
@@ -38,12 +40,14 @@ public class Main {
             String answer = reader.readLine();
             Result result = currentQuiz.provideAnswer(answer);
             switch (result) {
-                case OK -> System.out.println("Right!");
-                case WRONG -> System.out.println("Wrong!!!");
-                case INCORRECT_INPUT -> System.out.println("Incorrect input. Try again");
+                case OK -> System.out.println(ANSI_CYAN + "Right!" + ANSI_WHITE);
+                case WRONG -> System.out.println(ANSI_RED + "Wrong!!!" + ANSI_WHITE);
+                case INCORRECT_INPUT -> System.out.println(ANSI_YELLOW + "Incorrect input. Try again" + ANSI_WHITE);
             }
         }
-        System.out.printf("Вaш результат: %f", currentQuiz.getMark());
+        NumberFormat nf = new DecimalFormat("#.######");
+        System.out.print(ANSI_BLUE + "Your score: " + ANSI_WHITE);
+        System.out.println(ANSI_GREEN + nf.format(currentQuiz.getMark()) + ANSI_WHITE);
     }
 
     /**
@@ -54,7 +58,6 @@ public class Main {
     static Map<String, Quiz> getQuizMap() throws IOException, ParseException {
         HashMap<String, Quiz> result = new HashMap<>();
         JSONParser parser = new JSONParser();
-//        JSONArray quizArray = (JSONArray) parser.parse(new FileReader("src/by/Iren137/quizer/input.json"));
         JSONArray quizArray = (JSONArray) parser.parse(new FileReader(jsonWay));
         for (Object quizObj : quizArray) {
             JSONObject quiz = (JSONObject) quizObj;
@@ -118,11 +121,12 @@ public class Main {
 
     private static ExpressionTask.Generator getExpressionTaskGenerator(JSONArray jsonObject) {
         EnumSet<Operations> operations1 = EnumSet.noneOf(Operations.class);
-        ExpressionTask.Generator out = new ExpressionTask.Generator(0, 0, operations1, 0);
+        operations1.add(Operations.generateSum);
+        ExpressionTask.Generator out = new ExpressionTask.Generator(-42, -42, operations1, 0);
         for (Object o : jsonObject) {
             JSONObject obj = (JSONObject) o;
-            double minNumber = (double) obj.get("min");
-            double maxNumber = (double) obj.get("max");
+            double minNumber = ((Number) obj.get("min")).doubleValue();
+            double maxNumber = ((Number) obj.get("max")).doubleValue();
             EnumSet<Operations> operations = EnumSet.noneOf(Operations.class);
             if (obj.get("plus").equals("yes")) {
                 operations.add(Operations.generateSum);
@@ -136,15 +140,15 @@ public class Main {
             if (obj.get("div").equals("yes")) {
                 operations.add(Operations.generateDivision);
             }
-            int accuracy = (int) obj.get("accuracy");
+            int accuracy = (int) (long) obj.get("accuracy");
             out.Add(minNumber, maxNumber, operations, accuracy);
         }
         return out;
     }
 
     private static Task getExpressionTask(JSONObject jsonObject) {
-        double min = (double) jsonObject.get("min");
-        double max = (double) jsonObject.get("max");
+        double min = ((Number) jsonObject.get("min")).doubleValue();
+        double max = ((Number) jsonObject.get("max")).doubleValue();
         EnumSet<Operations> operations = EnumSet.noneOf(Operations.class);
         if (jsonObject.get("plus").equals("yes")) {
             operations.add(Operations.generateSum);
@@ -158,17 +162,18 @@ public class Main {
         if (jsonObject.get("div").equals("yes")) {
             operations.add(Operations.generateDivision);
         }
-        int accuracy = (int) jsonObject.get("accuracy");
-        return new ExpressionTask.Generator(min, max, operations, accuracy).generate();
+        int accuracy = (int) (long) jsonObject.get("accuracy");
+        return new ExpressionTask(min, max, operations, accuracy);
     }
 
     private static EquationTask.Generator getEquationTaskGenerator(JSONArray jsonObject) {
         EnumSet<Operations> operations1 = EnumSet.noneOf(Operations.class);
-        EquationTask.Generator out = new EquationTask.Generator(0, 0, operations1, 0);
+        operations1.add(Operations.generateSum);
+        EquationTask.Generator out = new EquationTask.Generator(-42, -42, operations1, 0);
         for (Object o : jsonObject) {
             JSONObject obj = (JSONObject) o;
-            double min = (double) obj.get("min");
-            double max = (double) obj.get("max");
+            double min = ((Number) obj.get("min")).doubleValue();
+            double max = ((Number) obj.get("max")).doubleValue();
             EnumSet<Operations> operations = EnumSet.noneOf(Operations.class);
             if (obj.get("plus").equals("yes")) {
                 operations.add(Operations.generateSum);
@@ -182,15 +187,15 @@ public class Main {
             if (obj.get("div").equals("yes")) {
                 operations.add(Operations.generateDivision);
             }
-            int accuracy = (int) obj.get("accuracy");
+            int accuracy = (int) (long) obj.get("accuracy");
             out.Add(min, max, operations, accuracy);
         }
         return out;
     }
 
     private static Task getEquationTask(JSONObject jsonObject) {
-        double min = (double) jsonObject.get("min");
-        double max = (double) jsonObject.get("max");
+        double min = ((Number) jsonObject.get("min")).doubleValue();
+        double max = ((Number) jsonObject.get("max")).doubleValue();
         EnumSet<Operations> operations = EnumSet.noneOf(Operations.class);
         if (jsonObject.get("plus").equals("yes")) {
             operations.add(Operations.generateSum);
@@ -204,8 +209,8 @@ public class Main {
         if (jsonObject.get("div").equals("yes")) {
             operations.add(Operations.generateDivision);
         }
-        int accuracy = (int) jsonObject.get("accuracy");
-        return new EquationTask.Generator(min, max, operations, accuracy).generate();
+        int accuracy = (int) (long) jsonObject.get("accuracy");
+        return new EquationTask(min, max, operations, accuracy);
     }
 
     private static GroupTaskGenerator getGroupTaskGenerator(JSONArray jsonObject) throws IllegalClassFormatException {

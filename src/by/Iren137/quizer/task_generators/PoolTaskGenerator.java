@@ -5,6 +5,8 @@ import by.Iren137.quizer.tasks.Task;
 
 import java.util.*;
 
+import static java.lang.Math.abs;
+
 public class PoolTaskGenerator implements Task.Generator {
     boolean isAllowDuplicate;
     ArrayList<Task> tasksP = new ArrayList<>();
@@ -51,7 +53,7 @@ public class PoolTaskGenerator implements Task.Generator {
     public Task generate() {
         if (this.tasksP.size() > 0) {
             final Random random = new Random();
-            int num = random.nextInt() % this.tasksP.size();
+            int num = abs(random.nextInt()) % this.tasksP.size();
             Task out = this.tasksP.get(num);
             if (!this.isAllowDuplicate) {
                 this.tasksP.remove(num);

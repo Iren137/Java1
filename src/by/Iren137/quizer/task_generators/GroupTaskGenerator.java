@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
 
+import static java.lang.Math.abs;
+
 public class GroupTaskGenerator implements Task.Generator {
     ArrayList<Task> tasks = new ArrayList<>();
 
@@ -48,7 +50,7 @@ public class GroupTaskGenerator implements Task.Generator {
     public Task generate() {
         if (this.tasks.size() > 0) {
             final Random random = new Random();
-            int num = random.nextInt() % this.tasks.size();
+            int num = abs(random.nextInt()) % this.tasks.size();
             return this.tasks.get(num);
         } else {
             throw new IllegalArgumentException("Tasks are empty");

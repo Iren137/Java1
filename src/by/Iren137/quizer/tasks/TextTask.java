@@ -2,6 +2,8 @@ package by.Iren137.quizer.tasks;
 
 import by.Iren137.quizer.quiz.Result;
 
+import java.util.ArrayList;
+
 public class TextTask implements Task {
     private final String text;
     private final String answer;
@@ -36,6 +38,21 @@ public class TextTask implements Task {
             return Result.OK;
         } else {
             return Result.WRONG;
+        }
+    }
+    public static class Generator implements Task.Generator {
+        ArrayList<TextTask> textTasks = new ArrayList<>();
+        int current = 0;
+
+        public void Add(String text, String answer) {
+            this.textTasks.add(new TextTask(text, answer));
+        }
+
+        @Override
+        public Task generate() {
+            Task out = this.textTasks.get(this.current);
+            this.current++;
+            return out;
         }
     }
 }

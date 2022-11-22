@@ -7,6 +7,16 @@ public interface Task {
      @return текст задания
      */
     String getText();
+    String getAnswer();
+    interface Generator {
+        /**
+         * Генерирует Task.
+         *
+         * @return задание
+         * @see    Task
+         */
+        Task generate();
+    }
 
     /*
      * Проверяет ответ на задание и возвращает результат

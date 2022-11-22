@@ -4,7 +4,10 @@ import by.Iren137.quizer.exceptions.EmptyArgumentsException;
 import by.Iren137.quizer.quiz.Operations;
 import by.Iren137.quizer.quiz.Result;
 import by.Iren137.quizer.tasks.Operator;
+import by.Iren137.quizer.tasks.Task;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.EnumSet;
 
 import static java.lang.Math.abs;
@@ -54,6 +57,11 @@ public class ExpressionTask extends AbstractMathTask {
         out += " = ";
         return out;
     }
+    @Override
+    public String getAnswer() {
+        DecimalFormat format = new DecimalFormat();
+        return format.format(answer);
+    }
 
     @Override
     public Result validate(String input_answer) {
@@ -71,6 +79,35 @@ public class ExpressionTask extends AbstractMathTask {
             }
         } catch (NumberFormatException e) {
             return Result.INCORRECT_INPUT;
+        }
+    }
+    public static class Generator extends AbstractMathTask.Generator {
+        ArrayList<ExpressionTask> tasks = new ArrayList<>();
+        int current = 0;
+
+        /**
+         * @param minNumber минимальное число
+         * @param maxNumber максимальное число
+         *                  //     * @param generateSum            разрешить генерацию с оператором +
+         *                  //     * @param generateDifference     разрешить генерацию с оператором -
+         *                  //     * @param generateMultiplication разрешить генерацию с оператором *
+         *                  //     * @param generateDivision       разрешить генерацию с оператором /
+         */
+        public Generator(double minNumber, double maxNumber, EnumSet<Operations> operations, int precision) {
+            super(minNumber, maxNumber, operations, precision);
+        }
+
+        public void Add(double minNumber, double maxNumber, EnumSet<Operations> operations, int precision) {
+            this.tasks.add(new ExpressionTask(minNumber, maxNumber, operations, precision));
+        }
+
+        /**
+         * return задание типа {@link EquationTask}
+         */
+        public Task generate() {
+            ExpressionTask out = this.tasks.get(current);
+            current++;
+            return out;
         }
     }
 }

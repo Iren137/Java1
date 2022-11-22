@@ -5,7 +5,7 @@ import by.Iren137.quizer.tasks.Task;
 
 import java.util.*;
 
-public class PoolTaskGenerator implements TaskGenerator {
+public class PoolTaskGenerator implements Task.Generator {
     boolean isAllowDuplicate;
     ArrayList<Task> tasksP = new ArrayList<>();
 

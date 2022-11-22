@@ -6,6 +6,7 @@ import by.Iren137.quizer.quiz.Result;
 import by.Iren137.quizer.tasks.Operator;
 import by.Iren137.quizer.tasks.Task;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Random;
@@ -88,6 +89,12 @@ public class EquationTask extends AbstractMathTask {
     }
 
     @Override
+    public String getAnswer() {
+        DecimalFormat format = new DecimalFormat();
+        return format.format(x);
+    }
+
+    @Override
     public Result validate(String answer) {
         double value;
         try {
@@ -130,7 +137,9 @@ public class EquationTask extends AbstractMathTask {
          * return задание типа {@link EquationTask}
          */
         public Task generate() {
-            return new EquationTask(number1, number2, operation, isXOnFirstPosition);
+            EquationTask out = this.tasks.get(current);
+            current++;
+            return out;
         }
     }
 }

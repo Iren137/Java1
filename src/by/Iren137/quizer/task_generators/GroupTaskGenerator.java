@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
 
-public class GroupTaskGenerator implements TaskGenerator {
+public class GroupTaskGenerator implements Task.Generator {
     ArrayList<Task> tasks = new ArrayList<>();
 
     /**
@@ -15,11 +15,11 @@ public class GroupTaskGenerator implements TaskGenerator {
      *
      * @param generators генераторы, которые в конструктор передаются через запятую
      */
-    public GroupTaskGenerator(TaskGenerator... generators) {
+    public GroupTaskGenerator(Task.Generator... generators) {
         if (generators == null || generators.length == 0) {
             throw new EmptyGenerators();
         }
-        for (TaskGenerator generator : generators) {
+        for (Task.Generator generator : generators) {
             this.tasks.add(generator.generate());
         }
     }
@@ -29,12 +29,12 @@ public class GroupTaskGenerator implements TaskGenerator {
      *
      * @param generators генераторы, которые передаются в конструктор в Collection (например, {@link ArrayList})
      */
-    public GroupTaskGenerator(Collection<TaskGenerator> generators) {
+    public GroupTaskGenerator(Collection<Task.Generator> generators) {
         if (generators == null || generators.size() == 0) {
             throw new EmptyGenerators();
         }
         this.tasks = new ArrayList<>(generators.size());
-        for (TaskGenerator generator : generators) {
+        for (Task.Generator generator : generators) {
             this.tasks.add(generator.generate());
         }
     }

@@ -1,9 +1,12 @@
 package by.Iren137.quizer;
 
 import by.Iren137.quizer.quiz.*;
-import by.Iren137.quizer.task_generators.*;
+import by.Iren137.quizer.task_generators.GroupTaskGenerator;
+import by.Iren137.quizer.task_generators.PoolTaskGenerator;
 import by.Iren137.quizer.tasks.Task;
 import by.Iren137.quizer.tasks.TextTask;
+import by.Iren137.quizer.tasks.math_tasks.EquationTask;
+import by.Iren137.quizer.tasks.math_tasks.ExpressionTask;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -51,6 +54,7 @@ public class Main {
     static Map<String, Quiz> getQuizMap() throws IOException, ParseException {
         HashMap<String, Quiz> result = new HashMap<>();
         JSONParser parser = new JSONParser();
+//        JSONArray quizArray = (JSONArray) parser.parse(new FileReader("src/by/Iren137/quizer/input.json"));
         JSONArray quizArray = (JSONArray) parser.parse(new FileReader(jsonWay));
         for (Object quizObj : quizArray) {
             JSONObject quiz = (JSONObject) quizObj;
@@ -89,9 +93,9 @@ public class Main {
         return result;
     }
 
-    private static TextTaskGenerator getTextTaskGenerator(JSONArray quiz) {
+    private static TextTask.Generator getTextTaskGenerator(JSONArray quiz) {
         try {
-            TextTaskGenerator out = new TextTaskGenerator();
+            TextTask.Generator out = new TextTask.Generator();
             for (Object obj : quiz) {
                 JSONObject o = (JSONObject) obj;
                 out.Add((String) o.get("task"), (String) o.get("answer"));
@@ -112,12 +116,13 @@ public class Main {
         throw new IllegalArgumentException("Invalid answer");
     }
 
-    private static ExpressionTaskGenerator getExpressionTaskGenerator(JSONArray jsonObject) {
-        ExpressionTaskGenerator out = new ExpressionTaskGenerator();
+    private static ExpressionTask.Generator getExpressionTaskGenerator(JSONArray jsonObject) {
+        EnumSet<Operations> operations1 = EnumSet.noneOf(Operations.class);
+        ExpressionTask.Generator out = new ExpressionTask.Generator(0, 0, operations1, 0);
         for (Object o : jsonObject) {
             JSONObject obj = (JSONObject) o;
-            double min = (double) obj.get("min");
-            double max = (double) obj.get("max");
+            double minNumber = (double) obj.get("min");
+            double maxNumber = (double) obj.get("max");
             EnumSet<Operations> operations = EnumSet.noneOf(Operations.class);
             if (obj.get("plus").equals("yes")) {
                 operations.add(Operations.generateSum);
@@ -132,7 +137,7 @@ public class Main {
                 operations.add(Operations.generateDivision);
             }
             int accuracy = (int) obj.get("accuracy");
-            out.Add(min, max, operations, accuracy);
+            out.Add(minNumber, maxNumber, operations, accuracy);
         }
         return out;
     }
@@ -154,11 +159,12 @@ public class Main {
             operations.add(Operations.generateDivision);
         }
         int accuracy = (int) jsonObject.get("accuracy");
-        return new ExpressionTaskGenerator(min, max, operations, accuracy).generate();
+        return new ExpressionTask.Generator(min, max, operations, accuracy).generate();
     }
 
-    private static EquationTaskGenerator getEquationTaskGenerator(JSONArray jsonObject) {
-        EquationTaskGenerator out = new EquationTaskGenerator();
+    private static EquationTask.Generator getEquationTaskGenerator(JSONArray jsonObject) {
+        EnumSet<Operations> operations1 = EnumSet.noneOf(Operations.class);
+        EquationTask.Generator out = new EquationTask.Generator(0, 0, operations1, 0);
         for (Object o : jsonObject) {
             JSONObject obj = (JSONObject) o;
             double min = (double) obj.get("min");
@@ -199,11 +205,11 @@ public class Main {
             operations.add(Operations.generateDivision);
         }
         int accuracy = (int) jsonObject.get("accuracy");
-        return new EquationTaskGenerator(min, max, operations, accuracy).generate();
+        return new EquationTask.Generator(min, max, operations, accuracy).generate();
     }
 
     private static GroupTaskGenerator getGroupTaskGenerator(JSONArray jsonObject) throws IllegalClassFormatException {
-        Collection<TaskGenerator> result = new ArrayList<>();
+        Collection<Task.Generator> result = new ArrayList<>();
         for (Object o : jsonObject) {
             JSONObject obj = (JSONObject) o;
             String generator = (String) obj.get("type");

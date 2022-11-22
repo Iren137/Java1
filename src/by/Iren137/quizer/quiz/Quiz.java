@@ -1,15 +1,14 @@
 package by.Iren137.quizer.quiz;
 
-import by.Iren137.quizer.exceptions.NotFinishedException;
 import by.Iren137.quizer.exceptions.EmptyTasksException;
-import by.Iren137.quizer.task_generators.TaskGenerator;
+import by.Iren137.quizer.exceptions.NotFinishedException;
 import by.Iren137.quizer.tasks.Task;
 
 /**
  * Class, который описывает один тест
  */
 public class Quiz {
-    TaskGenerator generator;
+    Task.Generator generator;
     int taskCount;
     int wrongAnswers = 0;
     int correctAnswers = 0;
@@ -21,7 +20,7 @@ public class Quiz {
      * @param generator_in генератор заданий
      * @param taskCount_in количество заданий в тесте
      */
-    public Quiz(TaskGenerator generator_in, int taskCount_in) {
+    public Quiz(Task.Generator generator_in, int taskCount_in) {
         this.generator = generator_in;
         this.taskCount = taskCount_in;
     }

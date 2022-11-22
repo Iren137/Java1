@@ -1,7 +1,7 @@
 package by.Iren137.quizer.tasks.math_tasks;
 
 import by.Iren137.quizer.exceptions.EmptyArgumentsException;
-import by.Iren137.quizer.quiz.Operations;
+import by.Iren137.quizer.quiz.enums.Operations;
 import by.Iren137.quizer.tasks.Operator;
 
 import java.util.EnumSet;

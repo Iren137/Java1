@@ -2,6 +2,7 @@ package by.Iren137.quizer.quiz;
 
 import by.Iren137.quizer.exceptions.EmptyTasksException;
 import by.Iren137.quizer.exceptions.NotFinishedException;
+import by.Iren137.quizer.quiz.enums.Result;
 import by.Iren137.quizer.tasks.Task;
 
 /**

@@ -1,6 +1,10 @@
 package by.Iren137.quizer;
 
 import by.Iren137.quizer.quiz.*;
+import by.Iren137.quizer.quiz.enums.Generators;
+import by.Iren137.quizer.quiz.enums.Operations;
+import by.Iren137.quizer.quiz.enums.Result;
+import by.Iren137.quizer.quiz.enums.Tasks;
 import by.Iren137.quizer.task_generators.GroupTaskGenerator;
 import by.Iren137.quizer.task_generators.PoolTaskGenerator;
 import by.Iren137.quizer.tasks.Task;
@@ -96,6 +100,16 @@ public class Main {
         return result;
     }
 
+    private static Task getTextTask(JSONObject jsonObject) {
+        try {
+            String taskText = (String) jsonObject.get("task");
+            String taskAnswer = (String) jsonObject.get("answer");
+            return new TextTask(taskText, taskAnswer);
+        } catch (ClassCastException ignored) {
+        }
+        throw new IllegalArgumentException("Invalid answer");
+    }
+
     private static TextTask.Generator getTextTaskGenerator(JSONArray quiz) {
         try {
             TextTask.Generator out = new TextTask.Generator();
@@ -109,14 +123,29 @@ public class Main {
         throw new IllegalArgumentException("Invalid answer");
     }
 
-    private static Task getTextTask(JSONObject jsonObject) {
-        try {
-            String taskText = (String) jsonObject.get("task");
-            String taskAnswer = (String) jsonObject.get("answer");
-            return new TextTask(taskText, taskAnswer);
-        } catch (ClassCastException ignored) {
+    static EnumSet<Operations> getOperations(JSONObject jsonObject) {
+        EnumSet<Operations> operations = EnumSet.noneOf(Operations.class);
+        if (jsonObject.get("plus").equals("yes")) {
+            operations.add(Operations.generateSum);
         }
-        throw new IllegalArgumentException("Invalid answer");
+        if (jsonObject.get("minus").equals("yes")) {
+            operations.add(Operations.generateDifference);
+        }
+        if (jsonObject.get("mul").equals("yes")) {
+            operations.add(Operations.generateMultiplication);
+        }
+        if (jsonObject.get("div").equals("yes")) {
+            operations.add(Operations.generateDivision);
+        }
+        return operations;
+    }
+
+    private static Task getExpressionTask(JSONObject jsonObject) {
+        double min = ((Number) jsonObject.get("min")).doubleValue();
+        double max = ((Number) jsonObject.get("max")).doubleValue();
+        EnumSet<Operations> operations = getOperations(jsonObject);
+        int accuracy = (int) (long) jsonObject.get("accuracy");
+        return new ExpressionTask(min, max, operations, accuracy);
     }
 
     private static ExpressionTask.Generator getExpressionTaskGenerator(JSONArray jsonObject) {
@@ -127,43 +156,19 @@ public class Main {
             JSONObject obj = (JSONObject) o;
             double minNumber = ((Number) obj.get("min")).doubleValue();
             double maxNumber = ((Number) obj.get("max")).doubleValue();
-            EnumSet<Operations> operations = EnumSet.noneOf(Operations.class);
-            if (obj.get("plus").equals("yes")) {
-                operations.add(Operations.generateSum);
-            }
-            if (obj.get("minus").equals("yes")) {
-                operations.add(Operations.generateDifference);
-            }
-            if (obj.get("mul").equals("yes")) {
-                operations.add(Operations.generateMultiplication);
-            }
-            if (obj.get("div").equals("yes")) {
-                operations.add(Operations.generateDivision);
-            }
+            EnumSet<Operations> operations = getOperations(obj);
             int accuracy = (int) (long) obj.get("accuracy");
             out.Add(minNumber, maxNumber, operations, accuracy);
         }
         return out;
     }
 
-    private static Task getExpressionTask(JSONObject jsonObject) {
+    private static Task getEquationTask(JSONObject jsonObject) {
         double min = ((Number) jsonObject.get("min")).doubleValue();
         double max = ((Number) jsonObject.get("max")).doubleValue();
-        EnumSet<Operations> operations = EnumSet.noneOf(Operations.class);
-        if (jsonObject.get("plus").equals("yes")) {
-            operations.add(Operations.generateSum);
-        }
-        if (jsonObject.get("minus").equals("yes")) {
-            operations.add(Operations.generateDifference);
-        }
-        if (jsonObject.get("mul").equals("yes")) {
-            operations.add(Operations.generateMultiplication);
-        }
-        if (jsonObject.get("div").equals("yes")) {
-            operations.add(Operations.generateDivision);
-        }
+        EnumSet<Operations> operations = getOperations(jsonObject);
         int accuracy = (int) (long) jsonObject.get("accuracy");
-        return new ExpressionTask(min, max, operations, accuracy);
+        return new EquationTask(min, max, operations, accuracy);
     }
 
     private static EquationTask.Generator getEquationTaskGenerator(JSONArray jsonObject) {
@@ -174,43 +179,11 @@ public class Main {
             JSONObject obj = (JSONObject) o;
             double min = ((Number) obj.get("min")).doubleValue();
             double max = ((Number) obj.get("max")).doubleValue();
-            EnumSet<Operations> operations = EnumSet.noneOf(Operations.class);
-            if (obj.get("plus").equals("yes")) {
-                operations.add(Operations.generateSum);
-            }
-            if (obj.get("minus").equals("yes")) {
-                operations.add(Operations.generateDifference);
-            }
-            if (obj.get("mul").equals("yes")) {
-                operations.add(Operations.generateMultiplication);
-            }
-            if (obj.get("div").equals("yes")) {
-                operations.add(Operations.generateDivision);
-            }
+            EnumSet<Operations> operations = getOperations(obj);
             int accuracy = (int) (long) obj.get("accuracy");
             out.Add(min, max, operations, accuracy);
         }
         return out;
-    }
-
-    private static Task getEquationTask(JSONObject jsonObject) {
-        double min = ((Number) jsonObject.get("min")).doubleValue();
-        double max = ((Number) jsonObject.get("max")).doubleValue();
-        EnumSet<Operations> operations = EnumSet.noneOf(Operations.class);
-        if (jsonObject.get("plus").equals("yes")) {
-            operations.add(Operations.generateSum);
-        }
-        if (jsonObject.get("minus").equals("yes")) {
-            operations.add(Operations.generateDifference);
-        }
-        if (jsonObject.get("mul").equals("yes")) {
-            operations.add(Operations.generateMultiplication);
-        }
-        if (jsonObject.get("div").equals("yes")) {
-            operations.add(Operations.generateDivision);
-        }
-        int accuracy = (int) (long) jsonObject.get("accuracy");
-        return new EquationTask(min, max, operations, accuracy);
     }
 
     private static GroupTaskGenerator getGroupTaskGenerator(JSONArray jsonObject) throws IllegalClassFormatException {

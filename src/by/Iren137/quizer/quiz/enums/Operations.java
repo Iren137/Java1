@@ -1,4 +1,4 @@
-package by.Iren137.quizer.quiz;
+package by.Iren137.quizer.quiz.enums;
 
 public enum Operations {
     generateSum,

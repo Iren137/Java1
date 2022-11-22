@@ -1,6 +1,6 @@
 package by.Iren137.quizer.tasks;
 
-import by.Iren137.quizer.quiz.Result;
+import by.Iren137.quizer.quiz.enums.Result;
 
 import java.util.ArrayList;
 

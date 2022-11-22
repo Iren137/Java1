@@ -7,7 +7,7 @@ import java.util.*;
 
 public class PoolTaskGenerator implements TaskGenerator {
     boolean isAllowDuplicate;
-    ArrayList<Task> tasksP;
+    ArrayList<Task> tasksP = new ArrayList<>();
 
     /**
      * Конструктор с переменным числом аргументов
@@ -32,7 +32,7 @@ public class PoolTaskGenerator implements TaskGenerator {
      * @param allowDuplicate разрешить повторения
      * @param tasks          задания, которые передаются в конструктор в Collection (например, {@link LinkedList})
      */
-    PoolTaskGenerator(
+    public PoolTaskGenerator(
             boolean allowDuplicate,
             Collection<Task> tasks
     ) {
@@ -40,10 +40,7 @@ public class PoolTaskGenerator implements TaskGenerator {
             throw new EmptyGenerators();
         }
         isAllowDuplicate = allowDuplicate;
-        for (Task task : tasks) {
-            assert false;
-            tasksP.add(task);
-        }
+        this.tasksP.addAll(tasks);
     }
 
 
@@ -54,10 +51,10 @@ public class PoolTaskGenerator implements TaskGenerator {
     public Task generate() {
         if (this.tasksP.size() > 0) {
             final Random random = new Random();
-            int num = random.nextInt() % tasksP.size();
+            int num = random.nextInt() % this.tasksP.size();
             Task out = this.tasksP.get(num);
             if (!this.isAllowDuplicate) {
-                tasksP.remove(num);
+                this.tasksP.remove(num);
             }
             return out;
         } else {

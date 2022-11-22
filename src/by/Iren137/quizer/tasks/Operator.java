@@ -4,5 +4,6 @@ public enum Operator {
     DIV,
     MUL,
     PLUS,
-    MINUS
+    MINUS,
+    ERROR
 }

@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Random;
 
 public class GroupTaskGenerator implements TaskGenerator {
-    ArrayList<Task> tasks;
+    ArrayList<Task> tasks = new ArrayList<>();
 
     /**
      * Конструктор с переменным числом аргументов
@@ -20,7 +20,7 @@ public class GroupTaskGenerator implements TaskGenerator {
             throw new EmptyGenerators();
         }
         for (TaskGenerator generator : generators) {
-            tasks.add(generator.generate());
+            this.tasks.add(generator.generate());
         }
     }
 
@@ -29,13 +29,13 @@ public class GroupTaskGenerator implements TaskGenerator {
      *
      * @param generators генераторы, которые передаются в конструктор в Collection (например, {@link ArrayList})
      */
-    GroupTaskGenerator(Collection<TaskGenerator> generators) {
+    public GroupTaskGenerator(Collection<TaskGenerator> generators) {
         if (generators == null || generators.size() == 0) {
             throw new EmptyGenerators();
         }
-        tasks = new ArrayList<>(generators.size());
+        this.tasks = new ArrayList<>(generators.size());
         for (TaskGenerator generator : generators) {
-            tasks.add(generator.generate());
+            this.tasks.add(generator.generate());
         }
     }
 
@@ -48,7 +48,7 @@ public class GroupTaskGenerator implements TaskGenerator {
     public Task generate() {
         if (this.tasks.size() > 0) {
             final Random random = new Random();
-            int num = random.nextInt() % tasks.size();
+            int num = random.nextInt() % this.tasks.size();
             return this.tasks.get(num);
         } else {
             throw new IllegalArgumentException("Tasks are empty");

@@ -3,17 +3,20 @@ package by.Iren137.quizer.task_generators;
 import by.Iren137.quizer.tasks.Task;
 import by.Iren137.quizer.tasks.TextTask;
 
-public class TextTaskGenerator implements TaskGenerator {
-    String text;
-    String answer;
+import java.util.ArrayList;
 
-    public TextTaskGenerator(String text, String answer) {
-        this.text = text;
-        this.answer = answer;
+public class TextTaskGenerator implements TaskGenerator {
+    ArrayList<TextTask> textTasks = new ArrayList<>();
+    int current = 0;
+
+    public void Add(String text, String answer) {
+        textTasks.add(new TextTask(text, answer));
     }
 
     @Override
     public Task generate() {
-        return new TextTask(this.text, this.answer);
+        Task out = this.textTasks.get(current);
+        current++;
+        return out;
     }
 }

@@ -13,7 +13,7 @@ public class TextTask implements Task {
         if (text_in == null || answer_in == null) {
             throw new IllegalArgumentException("Text or/and answer is null");
         }
-        this.text = text_in + "\n";
+        this.text = text_in += '\n';
         this.answer = answer_in;
     }
 
@@ -32,7 +32,7 @@ public class TextTask implements Task {
         if (answer == null || answer.length() == 0) {
             return Result.INCORRECT_INPUT;
         }
-        if (answer.equals(text)) {
+        if (answer.equals(this.answer)) {
             return Result.OK;
         } else {
             return Result.WRONG;

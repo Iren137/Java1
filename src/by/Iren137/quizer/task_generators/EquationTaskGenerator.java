@@ -1,45 +1,40 @@
-package by.Iren137.quizer.task_generators;
-
-import by.Iren137.quizer.tasks.EquationTask;
-
-public class EquationTaskGenerator implements TaskGenerator {
-    int minNumberEq;
-    int maxNumberEq;
-    boolean generateSumEq;
-    boolean generateDifferenceEq;
-    boolean generateMultiplicationEq;
-    boolean generateDivisionEq;
-
-    /**
-     * @param minNumber              минимальное число
-     * @param maxNumber              максимальное число
-     * @param generateSum            разрешить генерацию с оператором +
-     * @param generateDifference     разрешить генерацию с оператором -
-     * @param generateMultiplication разрешить генерацию с оператором *
-     * @param generateDivision       разрешить генерацию с оператором /
-     */
-    public EquationTaskGenerator(
-            int minNumber,
-            int maxNumber,
-            boolean generateSum,
-            boolean generateDifference,
-            boolean generateMultiplication,
-            boolean generateDivision
-    ) {
-        minNumberEq = minNumber;
-        maxNumberEq = maxNumber;
-        generateSumEq = generateSum;
-        generateDifferenceEq = generateDifference;
-        generateMultiplicationEq = generateMultiplication;
-        generateDivisionEq = generateDivision;
-    }
-
-    /**
-     * return задание типа {@link EquationTask}
-     */
-    @Override
-    public EquationTask generate() {
-        return new EquationTask(this.minNumberEq, this.maxNumberEq, this.generateSumEq, this.generateDifferenceEq,
-                this.generateMultiplicationEq, this.generateDivisionEq);
-    }
-}
+//package by.Iren137.quizer.task_generators;
+//
+//import by.Iren137.quizer.quiz.Operations;
+//import by.Iren137.quizer.tasks.math_tasks.EquationTask;
+//
+//import java.util.ArrayList;
+//import java.util.EnumSet;
+//
+//public class EquationTaskGenerator implements TaskGenerator {
+//    ArrayList<EquationTask> tasks = new ArrayList<>();
+//    int current = 0;
+//
+//    /**
+//     * @param minNumber              минимальное число
+//     * @param maxNumber              максимальное число
+////     * @param generateSum            разрешить генерацию с оператором +
+////     * @param generateDifference     разрешить генерацию с оператором -
+////     * @param generateMultiplication разрешить генерацию с оператором *
+////     * @param generateDivision       разрешить генерацию с оператором /
+//     */
+//    public EquationTaskGenerator(double minNumber, double maxNumber, EnumSet<Operations> operations, int precision) {
+//        this.tasks.add(new EquationTask(minNumber, maxNumber, operations, precision));
+//    }
+//
+//    public void Add(double minNumber, double maxNumber, EnumSet<Operations> operations, int precision) {
+//        this.tasks.add(new EquationTask(minNumber, maxNumber, operations, precision));
+//    }
+//
+//    public EquationTaskGenerator() {
+//    }
+//
+//    /**
+//     * return задание типа {@link EquationTask}
+//     */
+//    public EquationTask generate() {
+//        EquationTask out = tasks.get(current);
+//        current++;
+//        return out;
+//    }
+//}

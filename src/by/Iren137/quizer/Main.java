@@ -3,56 +3,44 @@ package by.Iren137.quizer;
 import by.Iren137.quizer.quiz.*;
 import by.Iren137.quizer.task_generators.*;
 import by.Iren137.quizer.tasks.Task;
+import by.Iren137.quizer.tasks.TextTask;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.instrument.IllegalClassFormatException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
+
+import static by.Iren137.quizer.Constants.jsonWay;
 
 public class Main {
     public static void main(String[] args) throws IOException, ParseException {
         Map<String, Quiz> quizMap = getQuizMap();
-        boolean is_quiz = false;
-        Quiz test = null;
-        Scanner in = new Scanner(System.in);
-        do {
-            System.out.println("Write name of the test\n");
-            String testName = in.toString();
-            for (Map.Entry<String, Quiz> element : quizMap.entrySet()) {
-                if (Objects.equals(element.getKey(), testName)) {
-                    is_quiz = true;
-                    test = element.getValue();
-                    break;
-                } else {
-                    System.out.println("Wrong name. Try again\n");
-                }
-            }
-        } while (!is_quiz);
+        System.out.println("Write name of the test");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-        while (!test.isFinished()) {
-            System.out.println(test.nextTask().getText());
-            String answer = in.toString();
-            Result result = test.provideAnswer(answer);
+        String variant = reader.readLine();
+        while (variant.equals("") || !quizMap.containsKey(variant)) {
+            System.out.println("Wrong name. Try again");
+            variant = reader.readLine();
+        }
+        Quiz currentQuiz = quizMap.get(variant);
+        while (!currentQuiz.isFinished()) {
+            System.out.print(currentQuiz.nextTask().getText());
+            String answer = reader.readLine();
+            Result result = currentQuiz.provideAnswer(answer);
             switch (result) {
-                case OK -> {
-                    System.out.println("Right!");
-                }
-                case WRONG -> {
-                    System.out.println("Wrong!!!");
-                }
-                case INCORRECT_INPUT -> {
-                    System.out.println("Incorrect input. Try again");
-                }
+                case OK -> System.out.println("Right!");
+                case WRONG -> System.out.println("Wrong!!!");
+                case INCORRECT_INPUT -> System.out.println("Incorrect input. Try again");
             }
         }
-        System.out.printf("Вaш результат: %f\n", test.getMark());
+        System.out.printf("Вaш результат: %f", currentQuiz.getMark());
     }
 
     /**
@@ -63,21 +51,35 @@ public class Main {
     static Map<String, Quiz> getQuizMap() throws IOException, ParseException {
         HashMap<String, Quiz> result = new HashMap<>();
         JSONParser parser = new JSONParser();
-        JSONArray quizArray = (JSONArray) parser.parse(new FileReader("src/by/Iren137/quizer/input.json"));
+        JSONArray quizArray = (JSONArray) parser.parse(new FileReader(jsonWay));
         for (Object quizObj : quizArray) {
             JSONObject quiz = (JSONObject) quizObj;
             String name = (String) quiz.get("name");
             int taskCount = (int) (long) quiz.get("number");
-            String generator = (String) quiz.get("generator");
+            String string_generator = (String) quiz.get("generator");
+            Generators generator = switch (string_generator) {
+                case "EquationTaskGenerator" -> Generators.EquationGenerator;
+                case "ExpressionTaskGenerator" -> Generators.ExpressionGenerator;
+                case "TextTaskGenerator" -> Generators.TextGenerator;
+                case "GroupTaskGenerator" -> Generators.GroupGenerator;
+                case "PoolTaskGenerator" -> Generators.PoolGenerator;
+                default -> Generators.Error;
+            };
+            boolean allowDuplicates = true;
+            if (generator == Generators.PoolGenerator) {
+                String duplicates = (String) quiz.get("duplication");
+                allowDuplicates = duplicates.equals("yes");
+            }
+            JSONArray tasks = (JSONArray) ((JSONObject) quizObj).get("tasks");
             try {
                 switch (generator) {
-                    case "TextTaskGenerator" -> result.put(name, new Quiz(getTextTaskGenerator(quiz), taskCount));
-                    case "ExpressionTaskGenerator" ->
-                            result.put(name, new Quiz(getExpressionTaskGenerator(quiz), taskCount));
-                    case "EquationTaskGenerator" ->
-                            result.put(name, new Quiz(getEquationTaskGenerator(quiz), taskCount));
-                    case "GroupTaskGenerator" -> result.put(name, new Quiz(getGroupTaskGenerator(quiz), taskCount));
-                    case "PoolTaskGenerator" -> result.put(name, new Quiz(getPoolTaskGenerator(quiz), taskCount));
+                    case TextGenerator -> result.put(name, new Quiz(getTextTaskGenerator(tasks), taskCount));
+                    case ExpressionGenerator ->
+                            result.put(name, new Quiz(getExpressionTaskGenerator(tasks), taskCount));
+                    case EquationGenerator -> result.put(name, new Quiz(getEquationTaskGenerator(tasks), taskCount));
+                    case GroupGenerator -> result.put(name, new Quiz(getGroupTaskGenerator(tasks), taskCount));
+                    case PoolGenerator ->
+                            result.put(name, new Quiz(getPoolTaskGenerator(tasks, allowDuplicates), taskCount));
                     default -> throw new IllegalClassFormatException("Unknown type of generator");
                 }
             } catch (IllegalArgumentException | IllegalClassFormatException e) {
@@ -87,11 +89,14 @@ public class Main {
         return result;
     }
 
-    private static TextTaskGenerator getTextTaskGenerator(JSONObject jsonObject) {
+    private static TextTaskGenerator getTextTaskGenerator(JSONArray quiz) {
         try {
-            String taskText = (String) jsonObject.get("text");
-            String taskAnswer = (String) jsonObject.get("answer");
-            return new TextTaskGenerator(taskText, taskAnswer);
+            TextTaskGenerator out = new TextTaskGenerator();
+            for (Object obj : quiz) {
+                JSONObject o = (JSONObject) obj;
+                out.Add((String) o.get("task"), (String) o.get("answer"));
+            }
+            return out;
         } catch (ClassCastException ignored) {
         }
         throw new IllegalArgumentException("Invalid answer");
@@ -99,84 +104,143 @@ public class Main {
 
     private static Task getTextTask(JSONObject jsonObject) {
         try {
-            String taskText = (String) jsonObject.get("text");
+            String taskText = (String) jsonObject.get("task");
             String taskAnswer = (String) jsonObject.get("answer");
-            return new TextTaskGenerator(taskText, taskAnswer).generate();
+            return new TextTask(taskText, taskAnswer);
         } catch (ClassCastException ignored) {
         }
         throw new IllegalArgumentException("Invalid answer");
     }
 
-    private static ExpressionTaskGenerator getExpressionTaskGenerator(JSONObject jsonObject) {
-        int min = (int) (long) jsonObject.get("min");
-        int max = (int) (long) jsonObject.get("max");
-        boolean plus = jsonObject.get("plus").equals("yes");
-        boolean minus = jsonObject.get("minus").equals("yes");
-        boolean mul = jsonObject.get("mul").equals("yes");
-        boolean div = jsonObject.get("div").equals("yes");
-        return new ExpressionTaskGenerator(min, max, plus, minus, mul, div);
+    private static ExpressionTaskGenerator getExpressionTaskGenerator(JSONArray jsonObject) {
+        ExpressionTaskGenerator out = new ExpressionTaskGenerator();
+        for (Object o : jsonObject) {
+            JSONObject obj = (JSONObject) o;
+            double min = (double) obj.get("min");
+            double max = (double) obj.get("max");
+            EnumSet<Operations> operations = EnumSet.noneOf(Operations.class);
+            if (obj.get("plus").equals("yes")) {
+                operations.add(Operations.generateSum);
+            }
+            if (obj.get("minus").equals("yes")) {
+                operations.add(Operations.generateDifference);
+            }
+            if (obj.get("mul").equals("yes")) {
+                operations.add(Operations.generateMultiplication);
+            }
+            if (obj.get("div").equals("yes")) {
+                operations.add(Operations.generateDivision);
+            }
+            int accuracy = (int) obj.get("accuracy");
+            out.Add(min, max, operations, accuracy);
+        }
+        return out;
     }
 
     private static Task getExpressionTask(JSONObject jsonObject) {
-        int min = (int) (long) jsonObject.get("min");
-        int max = (int) (long) jsonObject.get("max");
-        boolean plus = jsonObject.get("plus").equals("yes");
-        boolean minus = jsonObject.get("minus").equals("yes");
-        boolean mul = jsonObject.get("mul").equals("yes");
-        boolean div = jsonObject.get("div").equals("yes");
-        return new ExpressionTaskGenerator(min, max, plus, minus, mul, div).generate();
+        double min = (double) jsonObject.get("min");
+        double max = (double) jsonObject.get("max");
+        EnumSet<Operations> operations = EnumSet.noneOf(Operations.class);
+        if (jsonObject.get("plus").equals("yes")) {
+            operations.add(Operations.generateSum);
+        }
+        if (jsonObject.get("minus").equals("yes")) {
+            operations.add(Operations.generateDifference);
+        }
+        if (jsonObject.get("mul").equals("yes")) {
+            operations.add(Operations.generateMultiplication);
+        }
+        if (jsonObject.get("div").equals("yes")) {
+            operations.add(Operations.generateDivision);
+        }
+        int accuracy = (int) jsonObject.get("accuracy");
+        return new ExpressionTaskGenerator(min, max, operations, accuracy).generate();
     }
 
-    private static EquationTaskGenerator getEquationTaskGenerator(JSONObject jsonObject) {
-        int min = (int) (long) jsonObject.get("min");
-        int max = (int) (long) jsonObject.get("max");
-        boolean plus = jsonObject.get("plus").equals("yes");
-        boolean minus = jsonObject.get("minus").equals("yes");
-        boolean mul = jsonObject.get("mul").equals("yes");
-        boolean div = jsonObject.get("div").equals("yes");
-        return new EquationTaskGenerator(min, max, plus, minus, mul, div);
+    private static EquationTaskGenerator getEquationTaskGenerator(JSONArray jsonObject) {
+        EquationTaskGenerator out = new EquationTaskGenerator();
+        for (Object o : jsonObject) {
+            JSONObject obj = (JSONObject) o;
+            double min = (double) obj.get("min");
+            double max = (double) obj.get("max");
+            EnumSet<Operations> operations = EnumSet.noneOf(Operations.class);
+            if (obj.get("plus").equals("yes")) {
+                operations.add(Operations.generateSum);
+            }
+            if (obj.get("minus").equals("yes")) {
+                operations.add(Operations.generateDifference);
+            }
+            if (obj.get("mul").equals("yes")) {
+                operations.add(Operations.generateMultiplication);
+            }
+            if (obj.get("div").equals("yes")) {
+                operations.add(Operations.generateDivision);
+            }
+            int accuracy = (int) obj.get("accuracy");
+            out.Add(min, max, operations, accuracy);
+        }
+        return out;
     }
 
     private static Task getEquationTask(JSONObject jsonObject) {
-        int min = (int) (long) jsonObject.get("min");
-        int max = (int) (long) jsonObject.get("max");
-        boolean plus = jsonObject.get("plus").equals("yes");
-        boolean minus = jsonObject.get("minus").equals("yes");
-        boolean mul = jsonObject.get("mul").equals("yes");
-        boolean div = jsonObject.get("div").equals("yes");
-        return new EquationTaskGenerator(min, max, plus, minus, mul, div).generate();
+        double min = (double) jsonObject.get("min");
+        double max = (double) jsonObject.get("max");
+        EnumSet<Operations> operations = EnumSet.noneOf(Operations.class);
+        if (jsonObject.get("plus").equals("yes")) {
+            operations.add(Operations.generateSum);
+        }
+        if (jsonObject.get("minus").equals("yes")) {
+            operations.add(Operations.generateDifference);
+        }
+        if (jsonObject.get("mul").equals("yes")) {
+            operations.add(Operations.generateMultiplication);
+        }
+        if (jsonObject.get("div").equals("yes")) {
+            operations.add(Operations.generateDivision);
+        }
+        int accuracy = (int) jsonObject.get("accuracy");
+        return new EquationTaskGenerator(min, max, operations, accuracy).generate();
     }
 
-    private static GroupTaskGenerator getGroupTaskGenerator(JSONObject jsonObject) {
-        Object[] generatorsObjectArray = ((JSONArray) jsonObject.get("Generators")).toArray();
-        TaskGenerator[] generators = new TaskGenerator[generatorsObjectArray.length];
-        for (int i = 0; i < generatorsObjectArray.length; ++i) {
-            JSONObject generator = (JSONObject) generatorsObjectArray[i];
-            switch ((String) generator.get("GeneratorType")) {
-                case "TextTaskGenerator" -> generators[i] = getTextTaskGenerator(generator);
-                case "ExpressionTaskGenerator" -> generators[i] = getExpressionTaskGenerator(generator);
-                case "EquationTaskGenerator" -> generators[i] = getEquationTaskGenerator(generator);
-                case "GroupTaskGenerator" -> generators[i] = getGroupTaskGenerator(generator);
-                case "PoolTaskGenerator" -> generators[i] = getPoolTaskGenerator(generator);
-                default -> throw new IllegalArgumentException("No such type");
+    private static GroupTaskGenerator getGroupTaskGenerator(JSONArray jsonObject) throws IllegalClassFormatException {
+        Collection<TaskGenerator> result = new ArrayList<>();
+        for (Object o : jsonObject) {
+            JSONObject obj = (JSONObject) o;
+            String generator = (String) obj.get("type");
+            Generators generators = switch (generator) {
+                case "EquationTaskGenerator" -> Generators.EquationGenerator;
+                case "ExpressionTaskGenerator" -> Generators.ExpressionGenerator;
+                case "TextTaskGenerator" -> Generators.TextGenerator;
+                default -> Generators.Error;
+            };
+            switch (generators) {
+                case TextGenerator -> result.add(getTextTaskGenerator((JSONArray) obj.get("input")));
+                case ExpressionGenerator -> result.add(getExpressionTaskGenerator((JSONArray) obj.get("input")));
+                case EquationGenerator -> result.add(getEquationTaskGenerator((JSONArray) obj.get("input")));
+                default -> throw new IllegalClassFormatException("Unknown type of generator");
             }
         }
-        return new GroupTaskGenerator(generators);
+        return new GroupTaskGenerator(result);
     }
 
-    private static PoolTaskGenerator getPoolTaskGenerator(JSONObject quiz) {
-        boolean allowDuplicate = (boolean) quiz.get("AllowDuplicate");
-        Object[] tasksObjectArray = ((JSONArray) quiz.get("Tasks")).toArray();
-        Task[] tasks = new Task[tasksObjectArray.length];
-        for (int i = 0; i < tasksObjectArray.length; ++i) {
-            JSONObject task = (JSONObject) tasksObjectArray[i];
-            switch ((String) task.get("type")) {
-                case "TextTask" -> tasks[i] = getTextTask(task);
-                case "ExpressionTask" -> tasks[i] = getExpressionTask(task);
-                case "EquationTask" -> tasks[i] = getEquationTask(task);
-                default -> throw new IllegalArgumentException("No such type");
+    private static PoolTaskGenerator getPoolTaskGenerator(JSONArray jsonObject, boolean allowDuplicates) throws IllegalClassFormatException {
+        Collection<Task> result = new ArrayList<>();
+        for (Object o : jsonObject) {
+            JSONObject obj = (JSONObject) o;
+            String generator = (String) obj.get("type");
+            Tasks generators = switch (generator) {
+                case "EquationTask" -> Tasks.EquationTask;
+                case "ExpressionTask" -> Tasks.ExpressionTask;
+                case "TextTask" -> Tasks.TextTask;
+                default -> Tasks.Error;
+            };
+            switch (generators) {
+                case TextTask -> result.add(getTextTask((JSONObject) obj.get("input")));
+                case ExpressionTask -> result.add(getExpressionTask((JSONObject) obj.get("input")));
+                case EquationTask -> result.add(getEquationTask((JSONObject) obj.get("input")));
+                default -> throw new IllegalClassFormatException("Unknown type of generator");
             }
         }
-        return new PoolTaskGenerator(allowDuplicate, tasks);
+        return new PoolTaskGenerator(allowDuplicates, result);
     }
 }

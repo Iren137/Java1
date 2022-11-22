@@ -1,5 +1,5 @@
 package by.Iren137.quizer;
 
 public class Constants {
-    public static final double accuracy = 1e-4;
+    public static final String jsonWay = "src/by/Iren137/quizer/input.json";
 }

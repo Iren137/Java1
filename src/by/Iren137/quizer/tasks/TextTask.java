@@ -9,21 +9,23 @@ public class TextTask implements Task {
     private final String answer;
 
     public TextTask(
-            String text_in,
-            String answer_in
+            String text,
+            String answer
     ) {
-        if (text_in == null || answer_in == null) {
+        if (text == null || answer == null) {
             throw new IllegalArgumentException("Text or/and answer is null");
         }
-        this.text = text_in + '\n';
-        this.answer = answer_in;
+        this.text = text + '\n';
+        this.answer = answer;
     }
 
     @Override
     public String getText() {
         return text;
     }
-
+    public String getAnswer(){
+        return this.answer;
+    }
 
     @Override
     public Result validate(String answer) {
@@ -35,6 +37,14 @@ public class TextTask implements Task {
         } else {
             return Result.WRONG;
         }
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+        TextTask task = (TextTask) obj;
+        return ((this.text.equals(task.text) && this.answer.equals(task.answer)));
     }
 
     public static class Generator implements Task.Generator {

@@ -3,14 +3,11 @@ package by.Iren137.quizer.tasks.math_tasks;
 import by.Iren137.quizer.exceptions.EmptyArgumentsException;
 import by.Iren137.quizer.quiz.enums.Operations;
 import by.Iren137.quizer.quiz.enums.Result;
-import by.Iren137.quizer.tasks.Operator;
 import by.Iren137.quizer.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Random;
-
-import static java.lang.Math.abs;
 
 public class EquationTask extends AbstractMathTask {
     private final double x;
@@ -18,16 +15,7 @@ public class EquationTask extends AbstractMathTask {
 
     public EquationTask(double minNumber, double maxNumber, EnumSet<Operations> operations, int precision1) {
         super(minNumber, maxNumber, operations, precision1);
-        if (operations == null) {
-            throw new IllegalArgumentException("Operation is null");
-        }
-        if (maxNumber == 0 && this.getOperator() == Operator.DIV) {
-            throw new IllegalArgumentException("The expression is \"a / 0 = b\"");
-        }
-        Operator operator = this.getOperator();
-        if (minNumber == maxNumber && minNumber == 0 && (operator == Operator.DIV || operator == Operator.MUL)) {
-            throw new IllegalArgumentException("You've been caught by bad random. LOOSER!");
-        }
+
         final Random random = new Random();
         this.is_x_first = random.nextBoolean();
         double x = 0;
@@ -61,13 +49,21 @@ public class EquationTask extends AbstractMathTask {
         this.x = x;
     }
 
+    public String getAnswer() {
+        return this.getAnswer(x);
+    }
+
     @Override
     public String getText() {
         String out = "";
         if (is_x_first) {
             out += "x";
         } else {
-            out += this.getNumber1();
+            if (this.getPrecision() == 0) {
+                out += (int) num1;
+            } else {
+                out += num1;
+            }
         }
         switch (operator) {
             case MINUS -> out += " - ";
@@ -78,10 +74,18 @@ public class EquationTask extends AbstractMathTask {
         if (!is_x_first) {
             out += "x";
         } else {
-            out += this.getNumber1();
+            if (this.getPrecision() == 0) {
+                out += (int) num1;
+            } else {
+                out += num1;
+            }
         }
         out += " = ";
-        out += this.getNumber2();
+        if (this.getPrecision() == 0) {
+            out += (int) num2;
+        } else {
+            out += num2;
+        }
         out += '\n';
         out += "x = ";
         return out;
@@ -89,21 +93,7 @@ public class EquationTask extends AbstractMathTask {
 
     @Override
     public Result validate(String answer) {
-        double value;
-        try {
-            value = Double.parseDouble(answer);
-            double accuracy = 1.0;
-            for (int i = 0; i < precision; i++) {
-                accuracy /= 10;
-            }
-            if (abs(value - x) < accuracy) {
-                return Result.OK;
-            } else {
-                return Result.WRONG;
-            }
-        } catch (NumberFormatException e) {
-            return Result.INCORRECT_INPUT;
-        }
+        return this.validate(answer, x);
     }
 
     public static class Generator extends AbstractMathTask.Generator {
@@ -120,6 +110,7 @@ public class EquationTask extends AbstractMathTask {
          */
         public Generator(double minNumber, double maxNumber, EnumSet<Operations> operations, int precision) {
             super(minNumber, maxNumber, operations, precision);
+            this.tasks.add(new EquationTask(minNumber, maxNumber, operations, precision));
         }
 
         public void Add(double minNumber, double maxNumber, EnumSet<Operations> operations, int precision) {

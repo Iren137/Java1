@@ -48,12 +48,8 @@ public class GroupTaskGenerator implements Task.Generator {
      */
     @Override
     public Task generate() {
-        if (this.tasks.size() > 0) {
-            final Random random = new Random();
-            int num = abs(random.nextInt()) % this.tasks.size();
-            return this.tasks.get(num);
-        } else {
-            throw new IllegalArgumentException("Tasks are empty");
-        }
+        final Random random = new Random();
+        int num = abs(random.nextInt()) % this.tasks.size();
+        return this.tasks.get(num);
     }
 }

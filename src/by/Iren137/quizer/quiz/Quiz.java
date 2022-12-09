@@ -18,12 +18,12 @@ public class Quiz {
     boolean isIncorrect = false;
 
     /**
-     * @param generator_in генератор заданий
-     * @param taskCount_in количество заданий в тесте
+     * @param generator генератор заданий
+     * @param taskCount количество заданий в тесте
      */
-    public Quiz(Task.Generator generator_in, int taskCount_in) {
-        this.generator = generator_in;
-        this.taskCount = taskCount_in;
+    public Quiz(Task.Generator generator, int taskCount) {
+        this.generator = generator;
+        this.taskCount = taskCount;
     }
 
     /**

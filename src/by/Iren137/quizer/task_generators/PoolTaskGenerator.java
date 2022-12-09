@@ -9,7 +9,7 @@ import static java.lang.Math.abs;
 
 public class PoolTaskGenerator implements Task.Generator {
     boolean isAllowDuplicate;
-    ArrayList<Task> tasksP = new ArrayList<>();
+    List<Task> tasks = new ArrayList<>();
 
     /**
      * Конструктор с переменным числом аргументов
@@ -25,7 +25,7 @@ public class PoolTaskGenerator implements Task.Generator {
             throw new EmptyGenerators();
         }
         this.isAllowDuplicate = allowDuplicate;
-        this.tasksP.addAll(Arrays.asList(tasks));
+        this.tasks = removeDuplication(Arrays.stream(tasks).toList());
     }
 
     /**
@@ -42,25 +42,41 @@ public class PoolTaskGenerator implements Task.Generator {
             throw new EmptyGenerators();
         }
         isAllowDuplicate = allowDuplicate;
-        this.tasksP.addAll(tasks);
+        this.tasks = removeDuplication(tasks.stream().toList());
     }
 
+    public static ArrayList<Task> removeDuplication(List<Task> taskArrayList) {
+        ArrayList<Task> tasksArray = new ArrayList<>(taskArrayList);
+        for (int i = 0; i < tasksArray.size(); i++) {
+            for (int j = i + 1; j < tasksArray.size(); j++) {
+                if (tasksArray.get(i).equals(tasksArray.get(j))) {
+                    tasksArray.remove(tasksArray.get(j));
+                    j = i;
+                }
+            }
+        }
+        return tasksArray;
+    }
 
     /**
      * @return случайная задача из списка
      */
     @Override
     public Task generate() {
-        if (this.tasksP.size() > 0) {
+        if (this.tasks.size() > 0) {
             final Random random = new Random();
-            int num = abs(random.nextInt()) % this.tasksP.size();
-            Task out = this.tasksP.get(num);
+            int num = abs(random.nextInt()) % this.tasks.size();
+            Task out = this.tasks.get(num);
             if (!this.isAllowDuplicate) {
-                this.tasksP.remove(num);
+                this.tasks.remove(num);
             }
             return out;
         } else {
             throw new IllegalArgumentException("Tasks are empty");
         }
+    }
+
+    public int size() {
+        return this.tasks.size();
     }
 }

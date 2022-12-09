@@ -3,29 +3,17 @@ package by.Iren137.quizer.tasks.math_tasks;
 import by.Iren137.quizer.exceptions.EmptyArgumentsException;
 import by.Iren137.quizer.quiz.enums.Operations;
 import by.Iren137.quizer.quiz.enums.Result;
-import by.Iren137.quizer.tasks.Operator;
 import by.Iren137.quizer.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 
-import static java.lang.Math.abs;
-
 public class ExpressionTask extends AbstractMathTask {
     private final double answer;
 
-    public ExpressionTask(double minNumber, double maxNumber, EnumSet<Operations> operations, int precision1) {
-        super(minNumber, maxNumber, operations, precision1);
-        if (operations == null) {
-            throw new IllegalArgumentException("Operation is null");
-        }
-        if (maxNumber == 0 && this.getOperator() == Operator.DIV) {
-            throw new IllegalArgumentException("The expression is \"a / 0 = b\"");
-        }
-        Operator operator = this.getOperator();
-        if (minNumber == maxNumber && minNumber == 0 && (operator == Operator.DIV || operator == Operator.MUL)) {
-            throw new IllegalArgumentException("You've been caught by bad random. LOOSER!");
-        }
+    public ExpressionTask(double minNumber, double maxNumber, EnumSet<Operations> operations, int precision) {
+        super(minNumber, maxNumber, operations, precision);
+
         double answer = 0;
         switch (operator) {
             case PLUS -> answer = this.getNumber1() + this.getNumber2();
@@ -42,38 +30,36 @@ public class ExpressionTask extends AbstractMathTask {
         this.answer = answer;
     }
 
+    public String getAnswer() {
+        return this.getAnswer(answer);
+    }
+
     @Override
     public String getText() {
         String out = "";
-        out += num1;
+        if (this.getPrecision() == 0) {
+            out += (int) num1;
+        } else {
+            out += num1;
+        }
         switch (this.getOperator()) {
             case MINUS -> out += " - ";
             case PLUS -> out += " + ";
             case MUL -> out += " * ";
             case DIV -> out += " / ";
         }
-        out += num2;
+        if (this.getPrecision() == 0) {
+            out += (int) num2;
+        } else {
+            out += num2;
+        }
         out += " = ";
         return out;
     }
 
     @Override
     public Result validate(String input_answer) {
-        double value;
-        double accuracy = 1.0;
-        for (int i = 0; i < precision; i++) {
-            accuracy /= 10;
-        }
-        try {
-            value = Double.parseDouble(input_answer);
-            if (abs(value - answer) < accuracy) {
-                return Result.OK;
-            } else {
-                return Result.WRONG;
-            }
-        } catch (NumberFormatException e) {
-            return Result.INCORRECT_INPUT;
-        }
+        return this.validate(input_answer, answer);
     }
 
     public static class Generator extends AbstractMathTask.Generator {
@@ -90,6 +76,7 @@ public class ExpressionTask extends AbstractMathTask {
          */
         public Generator(double minNumber, double maxNumber, EnumSet<Operations> operations, int precision) {
             super(minNumber, maxNumber, operations, precision);
+            this.tasks.add(new ExpressionTask(minNumber, maxNumber, operations, precision));
         }
 
         public void Add(double minNumber, double maxNumber, EnumSet<Operations> operations, int precision) {

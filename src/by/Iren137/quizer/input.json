@@ -57,46 +57,50 @@
       {
         "min": 0.12,
         "max": 50.27,
-        "plus": "yes",
-        "minus": "yes",
-        "mul": "no",
-        "div": "no",
+        "Operations": [
+          "Sum",
+          "Difference"
+        ],
         "accuracy": 3
       },
       {
         "min": 1.1,
         "max": 50,
-        "plus": "yes",
-        "minus": "yes",
-        "mul": "yes",
-        "div": "yes",
+        "Operations": [
+          "Sum",
+          "Difference",
+          "Multiplication",
+          "Division"
+        ],
         "accuracy": 4
       },
       {
         "min": 1.1245,
         "max": 50.127,
-        "plus": "yes",
-        "minus": "yes",
-        "mul": "yes",
-        "div": "yes",
+        "Operations": [
+          "Sum",
+          "Difference",
+          "Multiplication",
+          "Division"
+        ],
         "accuracy": 3
       },
       {
         "min": 7.42,
         "max": 12,
-        "plus": "no",
-        "minus": "no",
-        "mul": "yes",
-        "div": "no",
+        "Operations": [
+          "Multiplication",
+          "Division"
+        ],
         "accuracy": 2
       },
       {
         "min": 1,
         "max": 9.350,
-        "plus": "yes",
-        "minus": "no",
-        "mul": "no",
-        "div": "no",
+        "Operations": [
+          "Difference",
+          "Multiplication"
+        ],
         "accuracy": 0
       }
     ]
@@ -109,46 +113,48 @@
       {
         "min": 0.14,
         "max": 50.98,
-        "plus": "yes",
-        "minus": "yes",
-        "mul": "no",
-        "div": "no",
+        "Operations": [
+          "Sum",
+          "Difference"
+        ],
         "accuracy": 0
       },
       {
         "min": 1.124561,
         "max": 50.845212,
-        "plus": "yes",
-        "minus": "yes",
-        "mul": "yes",
-        "div": "yes",
+        "Operations": [
+          "Sum",
+          "Difference",
+          "Multiplication",
+          "Division"
+        ],
         "accuracy": 6
       },
       {
         "min": 1,
         "max": 50,
-        "plus": "yes",
-        "minus": "yes",
-        "mul": "yes",
-        "div": "yes",
+        "Operations": [
+          "Sum",
+          "Difference",
+          "Multiplication",
+          "Division"
+        ],
         "accuracy": 5
       },
       {
         "min": 7.12,
         "max": 12.12,
-        "plus": "no",
-        "minus": "no",
-        "mul": "yes",
-        "div": "no",
+        "Operations": [
+          "Multiplication"
+        ],
         "accuracy": 2
       },
       {
         "min": 1.1242,
         "max": 9.5789,
-        "plus": "yes",
-        "minus": "no",
-        "mul": "no",
-        "div": "no",
+        "Operations": [
+          "Sum"
+        ],
         "accuracy": 4
       }
     ]
@@ -157,17 +163,17 @@
     "name": "Variant 5",
     "number": 3,
     "generator": "PoolTaskGenerator",
-    "duplication": "yes",
+    "duplication": 1,
     "tasks": [
       {
         "type": "ExpressionTask",
         "input": {
           "min": 0.1713,
           "max": 50.1,
-          "plus": "yes",
-          "minus": "yes",
-          "mul": "no",
-          "div": "no",
+          "Operations": [
+            "Sum",
+            "Difference"
+          ],
           "accuracy": 4
         }
       },
@@ -176,10 +182,11 @@
         "input": {
           "min": 1.14,
           "max": 50.98,
-          "plus": "yes",
-          "minus": "no",
-          "mul": "yes",
-          "div": "yes",
+          "Operations": [
+            "Sum",
+            "Multiplication",
+            "Division"
+          ],
           "accuracy": 2
         }
       },
@@ -194,19 +201,19 @@
   },
   {
     "name": "Variant 6",
-    "number": 3,
+    "number": 4,
     "generator": "PoolTaskGenerator",
-    "duplication": "no",
+    "duplication": 0,
     "tasks": [
       {
         "type": "ExpressionTask",
         "input": {
           "min": 0.1,
           "max": 50.0,
-          "plus": "yes",
-          "minus": "yes",
-          "mul": "no",
-          "div": "no",
+          "Operations": [
+            "Sum",
+            "Difference"
+          ],
           "accuracy": 3
         }
       },
@@ -215,11 +222,20 @@
         "input": {
           "min": 10.000001,
           "max": 100.005,
-          "plus": "yes",
-          "minus": "yes",
-          "mul": "yes",
-          "div": "yes",
+          "Operations": [
+            "Sum",
+            "Difference",
+            "Multiplication",
+            "Division"
+          ],
           "accuracy": 2
+        }
+      },
+      {
+        "type": "TextTask",
+        "input": {
+          "task": "what is the best programming language?",
+          "answer": "C++"
         }
       },
       {
@@ -235,17 +251,16 @@
     "name": "Variant 7",
     "number": 3,
     "generator": "PoolTaskGenerator",
-    "duplication": "no",
+    "duplication": 0,
     "tasks": [
       {
         "type": "EquationTask",
         "input": {
           "min": 48,
           "max": 50,
-          "plus": "yes",
-          "minus": "no",
-          "mul": "no",
-          "div": "no",
+          "Operations": [
+            "Sum"
+          ],
           "accuracy": 0
         }
       },
@@ -254,10 +269,12 @@
         "input": {
           "min": 10.2,
           "max": 100.3,
-          "plus": "yes",
-          "minus": "yes",
-          "mul": "yes",
-          "div": "yes",
+          "Operations": [
+            "Sum",
+            "Difference",
+            "Multiplication",
+            "Division"
+          ],
           "accuracy": 1
         }
       },
@@ -281,46 +298,48 @@
           {
             "min": 0,
             "max": 50,
-            "plus": "yes",
-            "minus": "yes",
-            "mul": "no",
-            "div": "no",
+            "Operations": [
+              "Sum",
+              "Difference"
+            ],
             "accuracy": 5
           },
           {
             "min": 1,
             "max": 50,
-            "plus": "yes",
-            "minus": "yes",
-            "mul": "yes",
-            "div": "yes",
+            "Operations": [
+              "Sum",
+              "Difference",
+              "Multiplication",
+              "Division"
+            ],
             "accuracy": 3
           },
           {
             "min": 1,
             "max": 50,
-            "plus": "yes",
-            "minus": "yes",
-            "mul": "yes",
-            "div": "yes",
+            "Operations": [
+              "Sum",
+              "Difference",
+              "Multiplication",
+              "Division"
+            ],
             "accuracy": 0
           },
           {
             "min": 7,
             "max": 12,
-            "plus": "no",
-            "minus": "no",
-            "mul": "yes",
-            "div": "no",
+            "Operations": [
+              "Multiplication"
+            ],
             "accuracy": 5
           },
           {
             "min": 1,
             "max": 9,
-            "plus": "yes",
-            "minus": "no",
-            "mul": "no",
-            "div": "no",
+            "Operations": [
+              "Sum"
+            ],
             "accuracy": 2
           }
         ]
@@ -331,46 +350,48 @@
           {
             "min": 0,
             "max": 50,
-            "plus": "yes",
-            "minus": "yes",
-            "mul": "no",
-            "div": "no",
+            "Operations": [
+              "Sum",
+              "Difference"
+            ],
             "accuracy": 1
           },
           {
             "min": 1,
             "max": 50,
-            "plus": "yes",
-            "minus": "yes",
-            "mul": "yes",
-            "div": "yes",
+            "Operations": [
+              "Sum",
+              "Difference",
+              "Multiplication",
+              "Division"
+            ],
             "accuracy": 4
           },
           {
             "min": 1,
             "max": 50,
-            "plus": "yes",
-            "minus": "yes",
-            "mul": "yes",
-            "div": "yes",
+            "Operations": [
+              "Sum",
+              "Difference",
+              "Multiplication",
+              "Division"
+            ],
             "accuracy": 2
           },
           {
             "min": 7,
             "max": 12,
-            "plus": "no",
-            "minus": "no",
-            "mul": "yes",
-            "div": "no",
+            "Operations": [
+              "Multiplication"
+            ],
             "accuracy": 1
           },
           {
             "min": 1,
             "max": 9,
-            "plus": "yes",
-            "minus": "no",
-            "mul": "no",
-            "div": "no",
+            "Operations": [
+              "Sum"
+            ],
             "accuracy": 1
           }
         ]
@@ -409,46 +430,48 @@
           {
             "min": 0,
             "max": 50,
-            "plus": "yes",
-            "minus": "yes",
-            "mul": "no",
-            "div": "no",
+            "Operations": [
+              "Sum",
+              "Difference"
+            ],
             "accuracy": 3
           },
           {
             "min": 1,
             "max": 50,
-            "plus": "yes",
-            "minus": "yes",
-            "mul": "yes",
-            "div": "yes",
+            "Operations": [
+              "Sum",
+              "Difference",
+              "Multiplication",
+              "Division"
+            ],
             "accuracy": 4
           },
           {
             "min": 1,
             "max": 50,
-            "plus": "yes",
-            "minus": "yes",
-            "mul": "yes",
-            "div": "yes",
+            "Operations": [
+              "Sum",
+              "Difference",
+              "Multiplication",
+              "Division"
+            ],
             "accuracy": 2
           },
           {
             "min": 7,
             "max": 12,
-            "plus": "no",
-            "minus": "no",
-            "mul": "yes",
-            "div": "no",
+            "Operations": [
+              "Multiplication"
+            ],
             "accuracy": 5
           },
           {
             "min": 1,
             "max": 9,
-            "plus": "yes",
-            "minus": "no",
-            "mul": "no",
-            "div": "no",
+            "Operations": [
+              "Sum"
+            ],
             "accuracy": 4
           }
         ]
@@ -509,6 +532,37 @@
             "answer": "perpetual motion machine does not exist"
           }
         ]
+      },
+      {
+        "type": "TextTaskGenerator",
+        "input": [
+          {
+            "task": "the root of 25 is ...",
+            "answer": "5"
+          },
+          {
+            "task": "the square of 3 is ...",
+            "answer": "9"
+          },
+          {
+            "task": "15 meters and 120 decimetres is ... metres",
+            "answer": "27"
+          },
+          {
+            "task": "how many months have 28 days?",
+            "answer": "12"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Variant with broken json",
+    "number": 2,
+    "generator": "GroupTaskGenerator",
+    "tasks": [
+      {
+        "type": "TextTaskGenerator"
       },
       {
         "type": "TextTaskGenerator",

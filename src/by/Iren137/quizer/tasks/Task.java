@@ -8,6 +8,8 @@ public interface Task {
      */
     String getText();
 
+    String getAnswer();
+
     interface Generator {
         /**
          * Генерирует Task.

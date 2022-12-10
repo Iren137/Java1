@@ -66,17 +66,7 @@ public class ExpressionTask extends AbstractMathTask {
         ArrayList<ExpressionTask> tasks = new ArrayList<>();
         int current = 0;
 
-        /**
-         * @param minNumber минимальное число
-         * @param maxNumber максимальное число
-         *                  //     * @param generateSum            разрешить генерацию с оператором +
-         *                  //     * @param generateDifference     разрешить генерацию с оператором -
-         *                  //     * @param generateMultiplication разрешить генерацию с оператором *
-         *                  //     * @param generateDivision       разрешить генерацию с оператором /
-         */
-        public Generator(double minNumber, double maxNumber, EnumSet<Operations> operations, int precision) {
-            super(minNumber, maxNumber, operations, precision);
-            this.tasks.add(new ExpressionTask(minNumber, maxNumber, operations, precision));
+        public Generator() {
         }
 
         public void Add(double minNumber, double maxNumber, EnumSet<Operations> operations, int precision) {

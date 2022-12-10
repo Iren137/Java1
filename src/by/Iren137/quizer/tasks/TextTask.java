@@ -23,7 +23,8 @@ public class TextTask implements Task {
     public String getText() {
         return text;
     }
-    public String getAnswer(){
+
+    public String getAnswer() {
         return this.answer;
     }
 
@@ -38,7 +39,7 @@ public class TextTask implements Task {
             return Result.WRONG;
         }
     }
-    @Override
+
     public boolean equals(Object obj) {
         if (obj == null || obj.getClass() != this.getClass()) {
             return false;

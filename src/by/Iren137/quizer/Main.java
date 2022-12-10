@@ -183,18 +183,14 @@ public class Main {
     }
 
     private static ExpressionTask.Generator getExpressionTaskGenerator(JSONArray jsonObject) throws IllegalClassFormatException {
-        ExpressionTask.Generator out = null;
-        for (int i = 0; i < jsonObject.size(); i++) {
-            JSONObject obj = (JSONObject) jsonObject.get(i);
+        ExpressionTask.Generator out = new ExpressionTask.Generator();
+        for (Object o : jsonObject) {
+            JSONObject obj = (JSONObject) o;
             double minNumber = ((Number) obj.get("min")).doubleValue();
             double maxNumber = ((Number) obj.get("max")).doubleValue();
             EnumSet<Operations> operations = getOperations(obj);
             int accuracy = (int) (long) obj.get("accuracy");
-            if (i == 0) {
-                out = new ExpressionTask.Generator(minNumber, maxNumber, operations, accuracy);
-            } else {
-                out.Add(minNumber, maxNumber, operations, accuracy);
-            }
+            out.Add(minNumber, maxNumber, operations, accuracy);
         }
         return out;
     }
@@ -208,18 +204,14 @@ public class Main {
     }
 
     private static EquationTask.Generator getEquationTaskGenerator(JSONArray jsonObject) throws IllegalClassFormatException {
-        EquationTask.Generator out = null;
-        for (int i = 0; i < jsonObject.size(); i++) {
-            JSONObject obj = (JSONObject) jsonObject.get(i);
+        EquationTask.Generator out = new EquationTask.Generator();
+        for (Object o : jsonObject) {
+            JSONObject obj = (JSONObject) o;
             double minNumber = ((Number) obj.get("min")).doubleValue();
             double maxNumber = ((Number) obj.get("max")).doubleValue();
             EnumSet<Operations> operations = getOperations(obj);
             int accuracy = (int) (long) obj.get("accuracy");
-            if (i == 0) {
-                out = new EquationTask.Generator(minNumber, maxNumber, operations, accuracy);
-            } else {
-                out.Add(minNumber, maxNumber, operations, accuracy);
-            }
+            out.Add(minNumber, maxNumber, operations, accuracy);
         }
         return out;
     }
